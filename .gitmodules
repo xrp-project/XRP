@@ -1,0 +1,27 @@
+[submodule "wiredtiger"]
+	path = wiredtiger
+	url = https://github.com/xrp-project/wiredtiger.git
+[submodule "linux"]
+	path = linux
+	url = https://github.com/xrp-project/linux.git
+[submodule "BPF-KV"]
+	path = BPF-KV
+	url = https://github.com/xrp-project/BPF-KV.git
+[submodule "My-YCSB"]
+	path = My-YCSB
+	url = https://github.com/xrp-project/My-YCSB.git
+[submodule "Specialized-BPF-KV/io_uring"]
+	path = Specialized-BPF-KV/io_uring
+	url = https://github.com/xrp-project/BPF-KV.git
+[submodule "Specialized-BPF-KV/io_uring_open_loop"]
+	path = Specialized-BPF-KV/io_uring_open_loop
+	url = https://github.com/xrp-project/BPF-KV.git
+[submodule "Specialized-BPF-KV/spdk"]
+	path = Specialized-BPF-KV/spdk
+	url = https://github.com/xrp-project/BPF-KV.git
+[submodule "Specialized-BPF-KV/spdk_open_loop"]
+	path = Specialized-BPF-KV/spdk_open_loop
+	url = https://github.com/xrp-project/BPF-KV.git
+[submodule "spdk"]
+	path = spdk
+	url = https://github.com/spdk/spdk.git
