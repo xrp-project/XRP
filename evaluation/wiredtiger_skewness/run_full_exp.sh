@@ -71,23 +71,20 @@ fi
 
 # Prepare trace files
 printf "Creating trace file folder...\n"
-if [ -e $TRACE_PATH ]; then
-    printf "Trace file folder already exists\n"
-else
-    mkdir -p $TRACE_PATH
-    if [ -e $CACHED_TRACE_PATH ]; then
-        printf "Found cached trace files. Copying...\n"
-        pushd $CACHED_TRACE_PATH
-        sudo cp * $TRACE_PATH/
-        popd
-    else
-        printf "Failed to find cached trace files. Generating traces...(This will take a while)\n"
-        for ZIPF in 1.1 1.2 1.3 1.4 1.5 1.6; do
-            printf "Generating trace for ZIPF=$ZIPF...\n"
+mkdir -p $TRACE_PATH
+for ZIPF in 1.1 1.2 1.3 1.4 1.5 1.6; do
+    if [ ! -e $TRACE_PATH/trace_$ZIPF ]; then
+        if [ -e $CACHED_TRACE_PATH/trace_$ZIPF ]; then
+            printf "Found cached trace file for ZIPF=$ZIPF. Copying...\n"
+            pushd $CACHED_TRACE_PATH
+            sudo cp trace_$ZIPF $TRACE_PATH/
+            popd
+        else
+            printf "Failed to find trace file for ZIPF=$ZIPF. Generating trace for it...(This will take a while)\n"
             python3 $TRACE_GENERATOR_PATH $ZIPF $TRACE_PATH/trace_$ZIPF
-        done
+        fi
     fi
-fi
+done
 
 # Run experiments
 for ZIPF in 0 0.6 0.7 0.8 0.9 0.99 1.1 1.2 1.3 1.4 1.5 1.6; do

@@ -75,12 +75,12 @@ for CONFIG in "ycsb_a.yaml" "ycsb_b.yaml" "ycsb_c.yaml" "ycsb_d.yaml" "ycsb_e.ya
 
         # Run with XRP
         export WT_BPF_PATH="$WT_PATH/bpf_prog/wt_bpf.o"
-        printf "Evaluating WiredTiger with $CACHE_SIZE cache, $NUM_THREADS threads, and XRP...\n"
+        printf "Evaluating WiredTiger with $CONFIG, $CACHE_SIZE cache, $NUM_THREADS threads, and XRP...\n"
         sudo -E ./run_wt $YCSB_CONFIG_PATH | tee $EVAL_PATH/result/$CONFIG-$CACHE_SIZE-cache-$NUM_THREADS-threads-xrp.txt
 
         # Run without XRP
         unset WT_BPF_PATH
-        printf "Evaluating WiredTiger with $CACHE_SIZE cache, $NUM_THREADS threads, and read()...\n"
+        printf "Evaluating WiredTiger with $CONFIG, $CACHE_SIZE cache, $NUM_THREADS threads, and read()...\n"
         sudo -E ./run_wt $YCSB_CONFIG_PATH | tee $EVAL_PATH/result/$CONFIG-$CACHE_SIZE-cache-$NUM_THREADS-threads-read.txt
     done
 done

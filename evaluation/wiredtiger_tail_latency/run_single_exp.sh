@@ -107,7 +107,7 @@ else
     sudo ./init_wt $YCSB_CONFIG_PATH
 fi
 
-printf "Evaluating WiredTiger with $CACHE_SIZE cache and $NUM_THREADS threads...\n"
+printf "Evaluating WiredTiger with $CONFIG, $CACHE_SIZE cache and $NUM_THREADS threads...\n"
 if [ $USE_XRP == 'y' ]; then
     export WT_BPF_PATH="$WT_PATH/bpf_prog/wt_bpf.o"
     sudo -E ./run_wt $YCSB_CONFIG_PATH | tee $EVAL_PATH/result/$CONFIG-$CACHE_SIZE-cache-$NUM_THREADS-threads-xrp.txt

@@ -60,6 +60,7 @@ popd
 
 if [ -z "$(awk -F\' '/menuentry / {print $2}' /boot/grub/grub.cfg | grep -m 1 'Ubuntu, with Linux 5.12.0-xrp+')" ]; then
     printf "Cannot find XRP kernel. Please install the kernel manually.\n"
+    exit 1
 fi
 
 printf "XRP kernel is installed. To boot into XRP kernel, please run:\n"

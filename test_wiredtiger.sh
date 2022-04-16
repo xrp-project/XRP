@@ -46,10 +46,10 @@ sed -i 's#data_dir: .*#data_dir: "'$DB_PATH'"#' $YCSB_CONFIG_PATH
 export WT_BPF_PATH="$WT_PATH/bpf_prog/wt_bpf.o"
 
 printf "Creating a small WiredTiger database...\n"
-sudo ./init_wt $YCSB_CONFIG_PATH
+sudo -E ./init_wt $YCSB_CONFIG_PATH
 
 printf "Running a short YCSB A experiment with XRP enabled...\n"
-sudo ./run_wt $YCSB_CONFIG_PATH
+sudo -E ./run_wt $YCSB_CONFIG_PATH
 
 popd
 printf "Done.\n"

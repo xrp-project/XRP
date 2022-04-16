@@ -10,7 +10,7 @@ There are four major components:
 * Modified WiredTiger (based on v4.4.0) with XRP support
 * My-YCSB: An efficient YCSB benchmark written in C++ for WiredTiger
 
-Also, there are four specialized versions of BPF-KV. We use them to evaluate the performance of SPDK and io_uring with both closed-loop and open-loop load generators.
+There are also four specialized versions of BPF-KV. We use them to evaluate the performance of SPDK and io_uring with both closed-loop and open-loop load generators.
 
 ## Getting Started
 
@@ -81,7 +81,7 @@ However, our prototype also has some limitations: I/O request size is limited to
 
 Here is a list of the key results in the paper:
 * Table 3: Average latency of random lookup in BPF-KV
-* Figure 5(a): 99-percentile latency of BPF-KV
+* Figure 5(a): 99.9-percentile latency of BPF-KV
 * Figure 5(b): Single-thread throughput of BPF-KV for varying I/O index depth
 * Figure 5(c): Multi-thread throughput of BPF-KV with index depth 3
 * Figure 5(d): Multi-thread throughput of BPF-KV with index depth 6
@@ -93,10 +93,14 @@ Here is a list of the key results in the paper:
 * Figure 9(a): Throughput speedup of WiredTiger for varying skewness
 * Figure 9(b): 99-th percentile latency of WiredTiger
 
-The motivation graphs and numbers in the introduction and the motivation sections are out of the scope of this repository. They are already published in the HotOS '21 paper [BPF for storage: an exokernel-inspired approach](https://dl.acm.org/doi/10.1145/3458336.3465290). The source code for the HotOS '21 paper is also available: https://github.com/yuhong-zhong/bpf-storage-hotos.
+The motivation graphs and numbers in the introduction section and the motivation section are out of the scope of this repository. They are already published in the HotOS '21 paper [BPF for storage: an exokernel-inspired approach](https://dl.acm.org/doi/10.1145/3458336.3465290). The source code for the HotOS '21 paper is also available: https://github.com/yuhong-zhong/bpf-storage-hotos.
 
 ## Instructions to Reproduce Key Results
 
 For every experiment, there is a corresponding folder in the `evaluation` directory. You can run the full-length experiment by `./run_full_exp.sh` or only run a partial experiment by `./run_single_exp.sh`. To choose a disk other than `/dev/nvme0n1`, run `./run_full_exp.sh [disk name]` instead (not required on the test machine for reviewers). After running the experiment, all the raw results will be stored in the `result` folder within each experiment directory. Figures and tables can be generated using the `plot_*.py` and `get_*.py` Python scripts in each experiment folder.
 
-Since each full-length experiment can take a few hours or even a few days to finish, we recommend running partial experiments by `./run_single.exp.sh` first. For example, if you want to reproduce a specific data point in a figure or table, you can find the corresponding experiment folder and run `./run_single_exp.sh` in it without any argument. This will print the list of required parameters for this partial experiment. Then, you can run this script again with the arguments which describe the setting of that data point. After the experiment is done, you can check out the raw result in the `result` folder.
+Since some full-length experiments can take a few hours to finish, we recommend running partial experiments by `./run_single.exp.sh` first. For example, if you want to reproduce a specific data point in a figure or a table, you can find the corresponding experiment folder and run `./run_single_exp.sh` in it without any argument. This will print the list of required parameters for this partial experiment. Then, you can run this script again with the arguments which describe the setting of that data point. After the experiment is done, you can check out the raw result in the `result` folder. Note that even `./run_single_exp.sh` can take more than 20 minutes to finish.
+
+For full-length experiments, each BPF-KV experiment usually terminates within one hour, while each WiredTiger experiment may need at least a few hours to finish.
+
+Loading data into a new WiredTiger database is very time consuming. Therefore, we provide a pre-loaded WiredTiger database at `/tigerhome` on the test server. The scripts for WiredTiger experiments will copy the pre-loaded database automatically instead of creating a new one from scratch if it presents. We encourage others to also create a pre-loaded database for WiredTiger in advance. You can make a copy of the database left behind by YCSB C workload since it is read-only.

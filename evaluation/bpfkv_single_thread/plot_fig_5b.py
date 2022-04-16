@@ -1,6 +1,10 @@
+import matplotlib
+matplotlib.use('Agg')
+
 import numpy as np
 import matplotlib.pyplot as plt
 import re
+import itertools
 
 config_list = ["spdk", "iouring", "read", "xrp"]
 config_dict = {
@@ -11,6 +15,7 @@ config_dict = {
 }
 layer_list = [1, 2, 3, 4, 5, 6]
 thread = 1
+marker = itertools.cycle(('X', '.', 'v', '<', '>', 's')) 
 
 perf_dict = dict()
 
@@ -23,9 +28,10 @@ for config in config_list:
         perf_dict[(layer, thread, config, "p99_latency")] = float(re.search("99%   latency: (.*?) us", data).group(1))
 
 for config in config_list:
-    plt.plot(layer_list, [perf_dict[(layer, thread, config, "throughput")] for layer in layer_list],
-             label=config_dict[config], markersize=15)
+    plt.plot(layer_list, [perf_dict[(layer, thread, config, "throughput")] / 1000 for layer in layer_list],
+             label=config_dict[config], markersize=10, marker=next(marker))
 plt.xlabel("I/O Chain Length")
-plt.ylabel("Throughput (ops/sec)")
+plt.ylabel("Throughput (kOps/Sec)")
 plt.legend()
-plt.savefig("5b.pdf", format="pdf")
+plt.ylim(bottom=0)
+plt.savefig("5b.pdf", format="pdf", bbox_inches='tight', pad_inches=0.1)
