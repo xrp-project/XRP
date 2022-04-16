@@ -81,7 +81,7 @@ However, our prototype also has some limitations: I/O request size is limited to
 
 Here is a list of the key results in the paper:
 * Table 3: Average latency of random lookup in BPF-KV
-* Figure 5(a): 99-percentile latency of BPF-KV
+* Figure 5(a): 99.9-percentile latency of BPF-KV with index depth 6
 * Figure 5(b): Single-thread throughput of BPF-KV for varying I/O index depth
 * Figure 5(c): Multi-thread throughput of BPF-KV with index depth 3
 * Figure 5(d): Multi-thread throughput of BPF-KV with index depth 6
