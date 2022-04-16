@@ -81,7 +81,7 @@ However, our prototype also has some limitations: I/O request size is limited to
 
 Here is a list of the key results in the paper:
 * Table 3: Average latency of random lookup in BPF-KV
-* Figure 5(a): 99.9-percentile latency of BPF-KV
+* Figure 5(a): 99-percentile latency of BPF-KV
 * Figure 5(b): Single-thread throughput of BPF-KV for varying I/O index depth
 * Figure 5(c): Multi-thread throughput of BPF-KV with index depth 3
 * Figure 5(d): Multi-thread throughput of BPF-KV with index depth 6
@@ -94,6 +94,8 @@ Here is a list of the key results in the paper:
 * Figure 9(b): 99-th percentile latency of WiredTiger
 
 The motivation graphs and numbers in the introduction section and the motivation section are out of the scope of this repository. They are already published in the HotOS '21 paper [BPF for storage: an exokernel-inspired approach](https://dl.acm.org/doi/10.1145/3458336.3465290). The source code for the HotOS '21 paper is also available: https://github.com/yuhong-zhong/bpf-storage-hotos.
+
+Table 3, Figure 5, and Figure 6 in the draft are measured under an old version of the XRP kernel that does not have metadata digest. Therefore, the measurements may be different from the ones presented in the draft. We will revise the paper based on the new results.
 
 ## Instructions to Reproduce Key Results
 
