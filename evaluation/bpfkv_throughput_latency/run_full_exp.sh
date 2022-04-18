@@ -53,6 +53,9 @@ sudo ./db-bpf --load $LAYER
 for i in {1..12}; do
     REQ_PER_SEC=$((60000 * i))
     printf "Evaluating BPF-KV with $LAYER index lookup, $NUM_THREADS threads, $REQ_PER_SEC ops/s, and XRP...\n"
+    # Warmup first
+    sudo ./db-bpf --run $LAYER $NUM_OPS $NUM_THREADS 100 0 0 $(($REQ_PER_SEC / $NUM_THREADS))
+
     sudo ./db-bpf --run $LAYER $NUM_OPS $NUM_THREADS 100 0 0 $(($REQ_PER_SEC / $NUM_THREADS)) | tee $EVAL_PATH/result/$REQ_PER_SEC-ops-xrp.txt
 done
 popd
@@ -67,6 +70,9 @@ sudo ./db --mode load --layer $LAYER
 for i in {1..12}; do
     REQ_PER_SEC=$((60000 * i))
     printf "Evaluating BPF-KV with $LAYER index lookup, $NUM_THREADS threads, $REQ_PER_SEC ops/s, and SPDK...\n"
+    # Warmup first
+    sudo ./db --mode run --layer $LAYER --thread $NUM_THREADS --request $NUM_OPS --rate $(($REQ_PER_SEC / $NUM_THREADS)) --cache 0
+
     sudo ./db --mode run --layer $LAYER --thread $NUM_THREADS --request $NUM_OPS --rate $(($REQ_PER_SEC / $NUM_THREADS)) --cache 0 | tee $EVAL_PATH/result/$REQ_PER_SEC-ops-spdk.txt
 done
 # Rebind disk to kernel NVMe driver
