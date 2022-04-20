@@ -21,7 +21,7 @@ pushd /sys/devices/system/cpu
 for CORE in cpu[0-9]*; do
     pushd $CORE
 
-    if [ ! -e "online" ] || [ "$(cat online)" == "0" ]; then
+    if [ -e "online" ] && [ "$(cat online)" == "0" ]; then
         popd
         continue
     fi

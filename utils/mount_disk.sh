@@ -19,13 +19,19 @@ if [ ! -e $MOUNT_POINT ]; then
    sudo mkdir -p $MOUNT_POINT
 fi
 
-if [ -z "$(cat /proc/mounts | grep -m 1 $DEV_NAME)" ]; then
-    printf "$DEV_NAME is not mounted\n"
+if [ -z "$(cat /proc/mounts | grep -m 1 $DEV_NAME\\s$MOUNT_POINT)" ]; then
+    printf "$DEV_NAME is not mounted at $MOUNT_POINT\n"
+    # Unmount the disk from other mount points
+    $UTILS_PATH/unmount_disk.sh $DEV_NAME
     if [ -z "$(sudo file -sL $DEV_NAME | grep ext4)" ]; then
         printf "The format of $DEV_NAME is not ext4\n"
         printf "Formatting $DEV_NAME as ext4...\n"
         sudo mkfs.ext4 $DEV_NAME
     fi
-    printf "Mounting $DEV_NAME to $MOUNT_POINT...\n"
+    if [ ! -z "$(cat /proc/mounts | grep -m 1 $MOUNT_POINT)" ]; then
+        printf "Another disk is mounted at $MOUNT_POINT. Unmounting it...\n"
+        sudo umount $MOUNT_POINT
+    fi
+    printf "Mounting $DEV_NAME at $MOUNT_POINT...\n"
     sudo mount -t ext4 $DEV_NAME $MOUNT_POINT
 fi
