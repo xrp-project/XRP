@@ -1,3 +1,6 @@
+#!/bin/bash
+set -eux -o pipefail
+
 # Enable source
 printf "Installing dependencies...\n"
 sudo cp /etc/apt/sources.list /etc/apt/sources.list~
@@ -26,12 +29,12 @@ if [ ! -e "Makefile" ]; then
 fi
 
 # Cleanup the previous build
-rm ../linux-* 2> /dev/null
+rm -f ../linux-* 2> /dev/null
 make distclean
 
 # Configure kernel
 printf "Configuring kernel...\n"
-yes "" | make localmodconfig
+(yes "" || true) | make localmodconfig
 ./scripts/config -e CONFIG_DEBUG_INFO
 ./scripts/config -e CONFIG_BPF_SYSCALL
 ./scripts/config -e CONFIG_DEBUG_INFO_BTF
