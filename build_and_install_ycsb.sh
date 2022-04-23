@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Install build dependencies
 printf "Installing dependencies...\n"
 sudo apt-get update
