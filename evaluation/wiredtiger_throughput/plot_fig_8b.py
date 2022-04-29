@@ -86,12 +86,12 @@ for cache_size_index, cache_size in enumerate(plot_cache_size_list):
                      for workload in plot_workload_list]
         plt.bar(X + (inter_bar_width + bar_width) * (2 * cache_size_index + config_index),
                 value_arr, color=color, width=bar_width, alpha=0.5 if config == "xrp" else 1,
-                label=f'{cache_size}B Cache ({"Baseline" if config == "read" else "XRP"})')
+                label=f'{cache_size_dict[cache_size]} Cache ({"Baseline" if config == "read" else "XRP"})')
         for workload_index, workload in enumerate(plot_workload_list):
             x = X[workload_index] + (inter_bar_width + bar_width) * (2 * cache_size_index + config_index)
             x -= bar_width / 2
             y = value_arr[workload_index] + 10
-            if y >= 200:
+            if y >= 190:
                 # y = 142
                 y = 96
             value = value_arr[workload_index]

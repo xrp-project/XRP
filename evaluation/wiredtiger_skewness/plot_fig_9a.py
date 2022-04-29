@@ -33,7 +33,7 @@ plt.rcParams.update({'axes.linewidth': 2})
 plot_zipfian_constant_list = [0.6, 0.7, 0.8, 0.9, 0.99, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6]
 
 plt.figure(figsize=(6.4 * 1.5, 4.8 * 1.1))
-tp_speedup = np.ndarray(shape=(len(plot_zipfian_constant_list),), dtype=np.float)
+tp_speedup = np.ndarray(shape=(len(plot_zipfian_constant_list),), dtype=float)
 plt.axhline(sum(perf_dict[(0, "xrp", "throughput")].values()) / sum(perf_dict[(0, "read", "throughput")].values()),
             ls='--', color='C1', linewidth=3, label="Uniform")
 for i, zipfian_constant in enumerate(plot_zipfian_constant_list):

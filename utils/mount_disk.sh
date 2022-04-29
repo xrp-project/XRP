@@ -34,4 +34,5 @@ if [ -z "$(cat /proc/mounts | grep -m 1 $DEV_NAME\\s$MOUNT_POINT)" ]; then
     fi
     printf "Mounting $DEV_NAME at $MOUNT_POINT...\n"
     sudo mount -t ext4 $DEV_NAME $MOUNT_POINT
+    sudo chmod -R ugo+rw $MOUNT_POINT
 fi

@@ -22,6 +22,7 @@ CONFIG="ycsb_c.yaml"
 YCSB_CONFIG_PATH="$YCSB_PATH/wiredtiger/config/$CONFIG"
 CACHE_SIZE="512M"
 NUM_THREADS=1
+NUM_OPS=20000000
 DEV_NAME="/dev/nvme0n1"
 if [ ! -z $1 ]; then
     DEV_NAME=$1
@@ -31,6 +32,7 @@ printf "CONFIG=$CONFIG\n"
 printf "CACHE_SIZE=$CACHE_SIZE\n"
 printf "DEV_NAME=$DEV_NAME\n"
 printf "NUM_THREADS=$NUM_THREADS\n"
+printf "NUM_OPS=$NUM_OPS\n"
 
 # Check whether WiredTiger is built
 if [ ! -e "$WT_PATH/wt" ]; then
@@ -93,7 +95,8 @@ for ZIPF in 0 0.6 0.7 0.8 0.9 0.99 1.1 1.2 1.3 1.4 1.5 1.6; do
     sed -i 's#data_dir: .*#data_dir: "'$DB_PATH'"#' $YCSB_CONFIG_PATH
     sed -i 's#nr_thread: .*#nr_thread: '$NUM_THREADS'#' $YCSB_CONFIG_PATH
     sed -i 's#cache_size=[0-9A-Za-z]*,#cache_size='$CACHE_SIZE',#' $YCSB_CONFIG_PATH
-    
+    sed -i 's#nr_op: .*#nr_op: '$NUM_OPS'#' $YCSB_CONFIG_PATH
+
     if [ `echo "$ZIPF == 0" | bc` -eq 1 ]; then
         # Uniform distribution
         DIST="uniform"
