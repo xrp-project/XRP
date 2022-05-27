@@ -8,7 +8,7 @@ sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
 sudo apt-get update
 
 # Install build dependencies
-sudo apt-get build-dep linux linux-image-$(uname -r) -y
+sudo apt-get build-dep linux linux-image-$(uname -r) -y || true
 sudo apt-get install -y libncurses-dev flex bison openssl libssl-dev dkms \
     libelf-dev libudev-dev libpci-dev libiberty-dev \
     autoconf fakeroot bc cpio

@@ -1,5 +1,7 @@
 import matplotlib
 matplotlib.use('Agg')
+matplotlib.rcParams['pdf.fonttype'] = 42
+matplotlib.rcParams['ps.fonttype'] = 42
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,8 +16,8 @@ config_dict = {
     "xrp": "XRP",
 }
 layer_list = [3, 6]
-thread_list = [i for i in range(1, 12 + 1)]
-marker = itertools.cycle(('X', '.', 'v', '<', '>', 's')) 
+thread_list = [i for i in range(1, 24 + 1)]
+marker = itertools.cycle(('X', 's', 'v', 'o'))
 
 perf_dict = dict()
 
@@ -26,15 +28,24 @@ for config in config_list:
                 data = fp.read()
             perf_dict[(layer, thread, config, "throughput")] = float(re.search("Average throughput: (.*?) op/s", data).group(1))
             perf_dict[(layer, thread, config, "average_latency")] = float(re.search("latency: (.*?) usec", data).group(1))
-            perf_dict[(layer, thread, config, "p99_latency")] = float(re.search("99%   latency: (.*?) us", data).group(1))
+            perf_dict[(layer, thread, config, "p999_latency")] = float(re.search("99.9% latency: (.*?) us", data).group(1))
+            perf_dict[(layer, thread, config, "1ms_pct")] = float(re.search("Percentage of requests with latency >= 1ms: (.*)%", data).group(1))
 
-layer = 3
+plt.rcParams.update({'font.size': 16})
+plt.rcParams.update({'axes.linewidth': 1.5})
+plt.rcParams.update({'xtick.major.width': 1.5})
+plt.rcParams.update({'ytick.major.width': 1.5})
+plt.rcParams.update({'ytick.minor.width': 1.5})
+fig = plt.figure(figsize=(6.4 * 1, 4.8 * 0.8))
+
+layer = 6
 for config in config_list:
-    plt.plot(thread_list, [perf_dict[(layer, thread, config, "throughput")] / 1000 for thread in thread_list],
-             label=config_dict[config], markersize=10, marker=next(marker))
-plt.xlabel("Threads")
-plt.ylabel("Throughput (kOps/Sec)")
+    plt.plot(thread_list, [perf_dict[(layer, thread, config, "1ms_pct")] for thread in thread_list],
+             label=config_dict[config], markersize=9, marker=next(marker), linewidth=2)
+plt.xlabel("Number of Threads")
+plt.ylabel("Percentage of Requests\nwith Latency ≥ 1ms (%)")
 plt.legend()
-plt.xticks(thread_list)
-plt.ylim(bottom=0)
-plt.savefig("5c.pdf", format="pdf")
+plt.ylim(bottom=0, top=0.3)
+# plt.yscale("log")
+plt.xticks([1, 3, 6, 9, 12, 15, 18, 21, 24])
+plt.savefig("5c.pdf", format="pdf", bbox_inches='tight', pad_inches=0.1)

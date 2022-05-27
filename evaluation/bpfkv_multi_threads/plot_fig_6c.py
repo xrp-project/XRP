@@ -39,12 +39,34 @@ fig = plt.figure(figsize=(6.4 * 1, 4.8 * 0.8))
 
 layer = 6
 for config in config_list:
-    plt.plot(thread_list, [perf_dict[(layer, thread, config, "p99_latency")] for thread in thread_list],
+    plt.plot(thread_list, [perf_dict[(layer, thread, config, "throughput")] / 1000 for thread in thread_list],
              label=config_dict[config], markersize=9, marker=next(marker), linewidth=2)
 plt.xlabel("Number of Threads")
-plt.ylabel("99th Latency (µs)")
-plt.legend()
-# plt.yscale("log")
-plt.ylim(bottom=0, top=160)
-plt.xticks(thread_list[::2])
-plt.savefig("5a.pdf", format="pdf", bbox_inches='tight', pad_inches=0.1)
+plt.ylabel("Throughput (kOps/Sec)")
+plt.legend(loc="upper left")
+plt.xticks(thread_list[::])
+plt.ylim(bottom=0, top=500)
+plt.savefig("6c.pdf", format="pdf", bbox_inches='tight', pad_inches=0.1)
+
+max_tp_speedup = 0
+min_tp_speedup = 1
+max_p99_reduction = 0
+min_p99_reduction = 1
+for thread in thread_list:
+    read_tp = perf_dict[(layer, thread, "read", "throughput")]
+    read_p99 = perf_dict[(layer, thread, "read", "p99_latency")]
+
+    xrp_tp = perf_dict[(layer, thread, "xrp", "throughput")]
+    xrp_p99 = perf_dict[(layer, thread, "xrp", "p99_latency")]
+
+    tp_speedup = (xrp_tp - read_tp) / read_tp
+    p99_reduction = (read_p99 - xrp_p99) / read_p99
+
+    max_tp_speedup = max(max_tp_speedup, tp_speedup)
+    min_tp_speedup = min(min_tp_speedup, tp_speedup)
+
+    max_p99_reduction = max(max_p99_reduction, p99_reduction)
+    min_p99_reduction = min(min_p99_reduction, p99_reduction)
+
+print(f"Throughput Speedup: {100 * min_tp_speedup:.2f}%-{100 * max_tp_speedup:.2f}%")
+print(f"P99 Reduction: {100 * min_p99_reduction:.2f}%-{100 * max_p99_reduction:.2f}%")

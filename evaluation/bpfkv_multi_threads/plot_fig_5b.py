@@ -28,7 +28,7 @@ for config in config_list:
                 data = fp.read()
             perf_dict[(layer, thread, config, "throughput")] = float(re.search("Average throughput: (.*?) op/s", data).group(1))
             perf_dict[(layer, thread, config, "average_latency")] = float(re.search("latency: (.*?) usec", data).group(1))
-            perf_dict[(layer, thread, config, "p99_latency")] = float(re.search("99%   latency: (.*?) us", data).group(1))
+            perf_dict[(layer, thread, config, "p999_latency")] = float(re.search("99.9% latency: (.*?) us", data).group(1))
 
 plt.rcParams.update({'font.size': 16})
 plt.rcParams.update({'axes.linewidth': 1.5})
@@ -39,12 +39,11 @@ fig = plt.figure(figsize=(6.4 * 1, 4.8 * 0.8))
 
 layer = 6
 for config in config_list:
-    plt.plot(thread_list, [perf_dict[(layer, thread, config, "p99_latency")] for thread in thread_list],
+    plt.plot(thread_list, [perf_dict[(layer, thread, config, "p999_latency")] for thread in thread_list],
              label=config_dict[config], markersize=9, marker=next(marker), linewidth=2)
 plt.xlabel("Number of Threads")
-plt.ylabel("99th Latency (µs)")
+plt.ylabel("99.9th Latency (µs)")
 plt.legend()
-# plt.yscale("log")
-plt.ylim(bottom=0, top=160)
+plt.yscale("log")
 plt.xticks(thread_list[::2])
-plt.savefig("5a.pdf", format="pdf", bbox_inches='tight', pad_inches=0.1)
+plt.savefig("5b.pdf", format="pdf", bbox_inches='tight', pad_inches=0.1)

@@ -1,5 +1,7 @@
 import matplotlib
 matplotlib.use('Agg')
+matplotlib.rcParams['pdf.fonttype'] = 42
+matplotlib.rcParams['ps.fonttype'] = 42
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -13,12 +15,6 @@ workload_dict = {
     "ycsb_e.yaml": "YCSB E",
     "ycsb_f.yaml": "YCSB F",
 }
-cache_size_dict = {
-    "4096M": "4GB",
-    "2048M": "2GB",
-    "1024M": "1GB",
-    "512M": "512MB",
-}
 thread_list = [
     1,
     2,
@@ -31,24 +27,6 @@ perf_dict = dict()
 for workload in workload_dict:
     cache_size = "512M"
     for thread in thread_list:
-        for config in config_list:
-            with open(f"result/{workload}-{cache_size}-cache-{thread}-threads-{config}.txt", "r") as fp:
-                data = fp.read()
-            perf_dict[(workload, cache_size, thread, config, "average_latency")] = {
-                op: float(re.search(f"{op} average latency (.*?) ns", data).group(1))
-                for op in ["UPDATE", "INSERT", "READ", "SCAN", "READ_MODIFY_WRITE"]
-            }
-            perf_dict[(workload, cache_size, thread, config, "p99_latency")] = {
-                op: float(re.search(f"{op} p99 latency (.*?) ns", data).group(1))
-                for op in ["UPDATE", "INSERT", "READ", "SCAN", "READ_MODIFY_WRITE"]
-            }
-            perf_dict[(workload, cache_size, thread, config, "throughput")] = {
-                op: float(re.search(f".*overall:.*{op} throughput (.*?) ops/sec", data).group(1))
-                for op in ["UPDATE", "INSERT", "READ", "SCAN", "READ_MODIFY_WRITE"]
-            }
-    
-    thread = 1    
-    for cache_size in cache_size_dict:
         for config in config_list:
             with open(f"result/{workload}-{cache_size}-cache-{thread}-threads-{config}.txt", "r") as fp:
                 data = fp.read()
@@ -83,7 +61,7 @@ bar_dict = dict()
 for thread_index, thread in enumerate(plot_thread_list):
     color = f"C{thread_index}"
     for config_index, config in enumerate(["read", "xrp"]):
-        value_arr = [sum(perf_dict[(workload, "512M", thread, config, "throughput")].values()) / 1000
+        value_arr = [perf_dict[(workload, "512M", thread, config, "p99_latency")]["READ" if workload != "ycsb_e.yaml" else "SCAN"] / 1000
                      for workload in plot_workload_list]
         bar_dict[(thread, config)] = plt.bar(X + (inter_bar_width + bar_width) * (2 * thread_index + config_index),
                 value_arr, color=color, width=bar_width, alpha=0.5 if config == "xrp" else 1,
@@ -91,15 +69,16 @@ for thread_index, thread in enumerate(plot_thread_list):
         for workload_index, workload in enumerate(plot_workload_list):
             x = X[workload_index] + (inter_bar_width + bar_width) * (2 * thread_index + config_index)
             x -= bar_width / 2
-            y = value_arr[workload_index] + 10
-            if y >= 190:
-                y = 140
+            y = value_arr[workload_index] + 5
+            if y >= 150:
+                y = 110
             value = value_arr[workload_index]
             plt.text(x, y, f"{int(value)}", rotation='vertical', fontsize=18,
-                     color=color if value < 180 else 'w', fontweight='bold')
+                     color=color if value < 150 else 'w', fontweight='bold')
 
-plt.ylim(0, 250)
-plt.ylabel("KV Operations/Second\n(Thousands)")
+# plt.xlim(-0.2, nr_group - 0.05)
+plt.ylim(0, 200)
+plt.ylabel("P99 Read/Scan\nLatency (us)")
 plt.xticks(X + (bar_width) * (nr_bar_per_group / 2.2),
            [workload_dict[workload] for workload in plot_workload_list])
 
@@ -111,12 +90,12 @@ plt.xlim(-0.1, 5.7)
 legend_0 = plt.legend([bar_dict[(1, "read")], bar_dict[(1, "xrp")]],
                       ["1 Thread (Baseline)", "1 Thread (XRP)"],
                       ncol=1, labelspacing=0.2, columnspacing=1, fontsize=24,
-                      loc="upper left", bbox_to_anchor=(0.12, 1))
+                      loc="upper left", bbox_to_anchor=(0.05, 1))
 legend_1 = plt.legend([bar_dict[(2, "read")], bar_dict[(2, "xrp")], bar_dict[(3, "read")], bar_dict[(3, "xrp")]],
                       ["2 Threads (Baseline)", "2 Threads (XRP)", "3 Threads (Baseline)", "3 Threads (XRP)"],
                       ncol=1, labelspacing=0.2, columnspacing=1, fontsize=24,
-                      loc="upper right", bbox_to_anchor=(1, 1))
+                      loc="upper right", bbox_to_anchor=(0.88, 1))
 plt.gca().add_artist(legend_0)
 
 plt.tight_layout()
-plt.savefig(f"8a.pdf", format="pdf", bbox_inches='tight', pad_inches=0.1)
+plt.savefig(f"10b.pdf", format="pdf", bbox_inches='tight', pad_inches=0.1)

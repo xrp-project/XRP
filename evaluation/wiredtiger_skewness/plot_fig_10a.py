@@ -1,5 +1,7 @@
 import matplotlib
 matplotlib.use('Agg')
+matplotlib.rcParams['pdf.fonttype'] = 42
+matplotlib.rcParams['ps.fonttype'] = 42
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -43,8 +45,8 @@ plt.plot(plot_zipfian_constant_list, tp_speedup, marker='.', markersize=20, line
 
 plt.grid()
 plt.legend()
-plt.ylim(1, 1.4)
+plt.ylim(1, 1.32)
 plt.xlabel("Zipfian Constant")
 plt.ylabel("Throughput Speedup")
 plt.tight_layout()
-plt.savefig(f"9a.pdf", format="pdf", bbox_inches='tight', pad_inches=0.1)
+plt.savefig(f"10a.pdf", format="pdf", bbox_inches='tight', pad_inches=0.1)
