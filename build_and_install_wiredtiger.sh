@@ -12,8 +12,8 @@ printf "Installing dependencies...\n"
 sudo apt-get update
 sudo apt-get install -y gcc-multilib clang llvm libelf-dev libdwarf-dev
 
-wget -O /tmp/libbpf0_0.1.0-1_amd64.deb https://http.kali.org/kali/pool/main/libb/libbpf/libbpf0_0.1.0-1_amd64.deb
-wget -O /tmp/libbpf-dev_0.1.0-1_amd64.deb https://http.kali.org/kali/pool/main/libb/libbpf/libbpf-dev_0.1.0-1_amd64.deb
+wget -O /tmp/libbpf0_0.1.0-1_amd64.deb http://mirror.unesp.br/ubuntu-archive/pool/universe/libb/libbpf/libbpf0_0.1.0-1_amd64.deb
+wget -O /tmp/libbpf-dev_0.1.0-1_amd64.deb http://mirror.unesp.br/ubuntu-archive/pool/universe/libb/libbpf/libbpf-dev_0.1.0-1_amd64.deb
 wget -O /tmp/dwarves_1.17-1_amd64.deb http://old.kali.org/kali/pool/main/d/dwarves-dfsg/dwarves_1.17-1_amd64.deb
 
 sudo dpkg -i /tmp/libbpf0_0.1.0-1_amd64.deb
