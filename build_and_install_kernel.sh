@@ -40,6 +40,7 @@ printf "Configuring kernel...\n"
 ./scripts/config -e CONFIG_DEBUG_INFO_BTF
 ./scripts/config -e CONFIG_UIO
 ./scripts/config -e CONFIG_UIO_PCI_GENERIC
+./scripts/config -e CONFIG_EXT4_FS
 make olddefconfig
 if [ -z "$(cat .config | grep CONFIG_DEBUG_INFO_BTF)" ]; then
     printf "Cannot find CONFIG_DEBUG_INFO_BTF in .config file. Please enable it manually by 'make nconfig'.\n"
@@ -47,6 +48,10 @@ if [ -z "$(cat .config | grep CONFIG_DEBUG_INFO_BTF)" ]; then
 fi
 if [ -z "$(cat .config | grep CONFIG_UIO_PCI_GENERIC)" ]; then
     printf "Cannot find CONFIG_UIO_PCI_GENERIC in .config file. Please enable it manually by 'make nconfig'.\n"
+    exit 1
+fi
+if [ -z "$(cat .config | grep CONFIG_EXT4_FS)" ]; then
+    printf "Cannot find CONFIG_EXT4_FS in .config file. Please enable it manually by 'make nconfig'.\n"
     exit 1
 fi
 
